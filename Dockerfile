@@ -9,7 +9,7 @@ ARG RESTICPROFILE_VERSION=0.32.0
 # renovate: datasource=github-releases depName=restic/restic
 ARG RESTIC_VERSION=0.18.1
 # renovate: datasource=github-releases depName=rclone/rclone
-ARG RCLONE_VERSION=1.72.1
+ARG RCLONE_VERSION=1.73.3
 
 RUN apk add --no-cache bzip2 ca-certificates curl unzip
 

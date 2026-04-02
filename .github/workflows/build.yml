@@ -78,6 +78,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         if: github.event_name != 'pull_request'
         run: |
+          # renovate: datasource=docker depName=aquasec/trivy
           docker run --rm \
             -v "${{ github.workspace }}:/work" \
             -e TRIVY_USERNAME="${{ github.actor }}" \
