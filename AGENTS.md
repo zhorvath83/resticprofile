@@ -75,7 +75,7 @@ This repository currently manages a single container image definition with these
 - The repository builds and publishes a hardened `resticprofile` container image to GHCR.
 - The image bundles `resticprofile`, `restic`, and `rclone` from upstream release assets.
 - The primary use case is non-root scheduled container execution with `supercronic`.
-- The image is intended to run as UID/GID `65532:65532` by default, but orchestration may override that at runtime.
+- The image is intended to run as the `restic` user with UID/GID `65532:65532` by default, but orchestration may override that at runtime.
 - Read-only root filesystem compatibility is a design goal; writable runtime paths are expected to be `/resticprofile` and `/tmp`.
 - Renovate is expected to keep Dockerfile pins and GitHub Action references current.
 

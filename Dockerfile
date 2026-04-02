@@ -70,12 +70,12 @@ COPY --from=downloader /out/rclone /usr/bin/rclone
 COPY --from=downloader /out/resticprofile /usr/bin/resticprofile
 
 RUN apk add --no-cache ca-certificates curl logrotate openssh-client-default supercronic tzdata && \
-    addgroup -S -g 65532 resticprofile && \
+    addgroup -S -g 65532 restic && \
     adduser -S -D -H -h /resticprofile -s /sbin/nologin -G restic -u 65532 restic && \
     mkdir -p /resticprofile /tmp && \
     touch /resticprofile/crontab && \
     chmod 1777 /tmp && \
-    chown -R resticprofile:resticprofile /resticprofile /tmp
+    chown -R restic:restic /resticprofile /tmp
 
 WORKDIR /resticprofile
 USER 65532:65532

@@ -14,7 +14,7 @@ The image is built to support:
 
 ## Default Runtime Settings
 
-- User: `65532:65532`
+- User: `restic` (`65532:65532`)
 - Working directory: `/resticprofile`
 - Entrypoint: `resticprofile`
 - Default command: `--help`

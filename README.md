@@ -25,7 +25,7 @@ The runtime image keeps the executables under `/usr/bin` to stay aligned with th
 
 ## Runtime Contract
 
-- Default user: `65532:65532`
+- Default user: `restic` (`65532:65532`)
 - Working directory: `/resticprofile`
 - Writable paths required at runtime:
   - `/resticprofile`
