@@ -1,0 +1,53 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:recommended',
+    ':dependencyDashboard',
+    ':semanticCommits',
+    ':enablePreCommit',
+    'docker:enableMajor',
+  ],
+  assignees: [
+    '@zhorvath83',
+  ],
+  timezone: 'Europe/Budapest',
+  labels: [
+    'dependencies',
+  ],
+  packageRules: [
+    {
+      matchManagers: [
+        'github-actions',
+      ],
+      automerge: true,
+    },
+    {
+      matchManagers: [
+        'dockerfile',
+      ],
+      addLabels: [
+        'docker',
+      ],
+    },
+    {
+      matchDatasources: [
+        'github-releases',
+      ],
+      addLabels: [
+        'release-assets',
+      ],
+    },
+  ],
+  customManagers: [
+    {
+      customType: 'regex',
+      description: 'Update pinned release binaries in Dockerfile ARGs',
+      managerFilePatterns: [
+        '^Dockerfile$',
+      ],
+      matchStrings: [
+        '# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+ARG (?<packageName>[A-Z_]+)_VERSION=(?<currentValue>[^\\s]+)',
+      ],
+    },
+  ],
+}
