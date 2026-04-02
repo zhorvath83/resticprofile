@@ -71,7 +71,7 @@ COPY --from=downloader /out/resticprofile /usr/bin/resticprofile
 
 RUN apk add --no-cache ca-certificates curl logrotate openssh-client-default supercronic tzdata && \
     addgroup -S -g 65532 resticprofile && \
-    adduser -S -D -H -h /resticprofile -s /sbin/nologin -G resticprofile -u 65532 resticprofile && \
+    adduser -S -D -H -h /resticprofile -s /sbin/nologin -G restic -u 65532 restic && \
     mkdir -p /resticprofile /tmp && \
     touch /resticprofile/crontab && \
     chmod 1777 /tmp && \
