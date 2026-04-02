@@ -19,6 +19,8 @@ That flow does two things:
 - generates the user-owned crontab file under `/resticprofile`
 - starts `supercronic` as a non-root process using that generated schedule
 
+The image keeps the main executables under `/usr/bin` and sets `SHELL=/bin/sh` explicitly so the generated schedule remains compatible with the non-root container pattern described by upstream.
+
 ## Required Runtime Inputs
 
 For the scheduling flow to work reliably, provide:

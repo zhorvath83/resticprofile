@@ -37,6 +37,8 @@ The image does not declare Docker `VOLUME`s. Runtime mounts stay explicit so orc
 The image sets the following runtime environment variables:
 
 - `HOME=/resticprofile`
+- `PATH=/usr/bin:/usr/sbin:/bin:/sbin`
+- `SHELL=/bin/sh`
 - `TMPDIR=/tmp`
 - `TZ=Etc/UTC`
 - `XDG_CACHE_HOME=/tmp/.cache`

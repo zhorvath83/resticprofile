@@ -21,6 +21,7 @@ The image is designed for schedulers and orchestration platforms that prefer:
 - supporting packages needed for TLS, SSH, timezone data, and log rotation
 
 All three backup-related binaries are downloaded from upstream releases during the build and verified with published checksums.
+The runtime image keeps the executables under `/usr/bin` to stay aligned with the upstream non-root scheduling pattern.
 
 ## Runtime Contract
 

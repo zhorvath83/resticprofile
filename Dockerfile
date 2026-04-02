@@ -57,15 +57,17 @@ LABEL org.opencontainers.image.description="Non-root resticprofile container wit
 LABEL org.opencontainers.image.documentation="https://creativeprojects.github.io/resticprofile/"
 
 ENV HOME=/resticprofile \
+    PATH=/usr/bin:/usr/sbin:/bin:/sbin \
+    SHELL=/bin/sh \
     TMPDIR=/tmp \
     TZ=Etc/UTC \
     XDG_CACHE_HOME=/tmp/.cache \
     XDG_CONFIG_HOME=/resticprofile/.config \
     XDG_DATA_HOME=/resticprofile/.local/share
 
-COPY --from=downloader /out/restic /usr/local/bin/restic
-COPY --from=downloader /out/rclone /usr/local/bin/rclone
-COPY --from=downloader /out/resticprofile /usr/local/bin/resticprofile
+COPY --from=downloader /out/restic /usr/bin/restic
+COPY --from=downloader /out/rclone /usr/bin/rclone
+COPY --from=downloader /out/resticprofile /usr/bin/resticprofile
 
 RUN apk add --no-cache ca-certificates curl logrotate openssh-client-default supercronic tzdata && \
     addgroup -S -g 65532 resticprofile && \
