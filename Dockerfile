@@ -25,29 +25,30 @@ RUN case "${TARGETARCH}" in \
       --output /tmp/resticprofile.checksums.txt \
       "https://github.com/creativeprojects/resticprofile/releases/download/v${RESTICPROFILE_VERSION}/checksums.txt" && \
     curl --fail --silent --show-error --location \
-      --output /tmp/resticprofile.tar.gz \
+      --output "/tmp/${RESTICPROFILE_TARBALL}" \
       "https://github.com/creativeprojects/resticprofile/releases/download/v${RESTICPROFILE_VERSION}/${RESTICPROFILE_TARBALL}" && \
-    grep " ${RESTICPROFILE_TARBALL}\$" /tmp/resticprofile.checksums.txt | sha256sum -c - && \
-    tar -xzf /tmp/resticprofile.tar.gz -C /tmp && \
+    cd /tmp && \
+    grep " ${RESTICPROFILE_TARBALL}\$" resticprofile.checksums.txt | sha256sum -c - && \
+    tar -xzf "${RESTICPROFILE_TARBALL}" && \
     mkdir -p /out && \
     install -m 0755 "$(find /tmp -maxdepth 2 -type f -name resticprofile -print -quit)" /out/resticprofile && \
     curl --fail --silent --show-error --location \
       --output /tmp/restic.SHA256SUMS \
       "https://github.com/restic/restic/releases/download/v${RESTIC_VERSION}/SHA256SUMS" && \
     curl --fail --silent --show-error --location \
-      --output /tmp/restic.bz2 \
+      --output "/tmp/${RESTIC_BUNDLE}" \
       "https://github.com/restic/restic/releases/download/v${RESTIC_VERSION}/${RESTIC_BUNDLE}" && \
-    grep " ${RESTIC_BUNDLE}\$" /tmp/restic.SHA256SUMS | sha256sum -c - && \
-    bzip2 -dc /tmp/restic.bz2 > /out/restic && \
+    grep " ${RESTIC_BUNDLE}\$" /tmp/restic.SHA256SUMS | (cd /tmp && sha256sum -c -) && \
+    bzip2 -dc "/tmp/${RESTIC_BUNDLE}" > /out/restic && \
     chmod 0755 /out/restic && \
     curl --fail --silent --show-error --location \
       --output /tmp/rclone.SHA256SUMS \
       "https://downloads.rclone.org/v${RCLONE_VERSION}/SHA256SUMS" && \
     curl --fail --silent --show-error --location \
-      --output /tmp/rclone.zip \
+      --output "/tmp/${RCLONE_BUNDLE}" \
       "https://downloads.rclone.org/v${RCLONE_VERSION}/${RCLONE_BUNDLE}" && \
-    grep " ${RCLONE_BUNDLE}\$" /tmp/rclone.SHA256SUMS | sha256sum -c - && \
-    unzip -p /tmp/rclone.zip "rclone-v${RCLONE_VERSION}-linux-${ARCH}/rclone" > /out/rclone && \
+    grep " ${RCLONE_BUNDLE}\$" /tmp/rclone.SHA256SUMS | (cd /tmp && sha256sum -c -) && \
+    unzip -p "/tmp/${RCLONE_BUNDLE}" "rclone-v${RCLONE_VERSION}-linux-${ARCH}/rclone" > /out/rclone && \
     chmod 0755 /out/rclone
 
 FROM alpine:3.22
