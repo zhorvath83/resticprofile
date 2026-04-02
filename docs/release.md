@@ -31,18 +31,17 @@ The workflow:
 
 ## Tagging Model
 
-The metadata action generates tags from Git refs:
+The metadata action generates tags from the upstream `RESTICPROFILE_VERSION` pinned in `Dockerfile`:
 
-- branch tags for normal branch pushes
-- PR tags for pull request builds
-- semantic version tags for `v*` release tags
+- the exact upstream version, for example `0.32.0`
+- the upstream major-minor line, for example `0.32`
 - `latest` for the default branch
 - `sha-<commit>` tags
 
 This means:
 
-- `main` pushes publish a rolling `latest`
-- release tags publish versioned tags
+- published version tags follow the bundled upstream `resticprofile` release number
+- `main` pushes refresh the upstream-aligned version tags and `latest`
 - pull requests build but do not publish
 
 ## Release Expectations
@@ -50,7 +49,7 @@ This means:
 When cutting a release:
 
 1. make sure the Dockerfile pins and documentation are current
-2. push the release tag in the form `vX.Y.Z`
+2. merge or push the version bump that updates `RESTICPROFILE_VERSION`
 3. verify the GHCR package and workflow results
 
 ## Supply Chain Notes

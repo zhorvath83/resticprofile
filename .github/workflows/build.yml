@@ -27,6 +27,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Extract upstream version pins
+        id: versions
+        run: |
+          RESTICPROFILE_VERSION="$(sed -n 's/^ARG RESTICPROFILE_VERSION=//p' Dockerfile | head -n1)"
+          RESTICPROFILE_MAJOR_MINOR="$(printf '%s' "${RESTICPROFILE_VERSION}" | cut -d. -f1,2)"
+          echo "resticprofile_version=${RESTICPROFILE_VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "resticprofile_major_minor=${RESTICPROFILE_MAJOR_MINOR}" >> "${GITHUB_OUTPUT}"
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -47,10 +55,8 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=${{ steps.versions.outputs.resticprofile_version }}
+            type=raw,value=${{ steps.versions.outputs.resticprofile_major_minor }}
             type=sha,prefix=sha-
             type=raw,value=latest,enable={{is_default_branch}}
 
@@ -71,14 +77,17 @@ jobs:
 
       - name: Run Trivy vulnerability scanner
         if: github.event_name != 'pull_request'
-        uses: aquasecurity/trivy-action@v0.33.1
-        with:
-          image-ref: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
-          format: sarif
-          output: trivy-results.sarif
-        env:
-          TRIVY_USERNAME: ${{ github.actor }}
-          TRIVY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/work" \
+            -e TRIVY_USERNAME="${{ github.actor }}" \
+            -e TRIVY_PASSWORD="${{ secrets.GITHUB_TOKEN }}" \
+            aquasec/trivy:0.65.0 image \
+            --image-src remote \
+            --format sarif \
+            --output /work/trivy-results.sarif \
+            --no-progress \
+            "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}"
 
       - name: Upload Trivy results
         if: github.event_name != 'pull_request'
