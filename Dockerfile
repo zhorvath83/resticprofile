@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-FROM alpine:3.22 AS downloader
+FROM alpine:3.23 AS downloader
 
 ARG TARGETARCH
 
@@ -51,7 +51,7 @@ RUN case "${TARGETARCH}" in \
     unzip -p "/tmp/${RCLONE_BUNDLE}" "rclone-v${RCLONE_VERSION}-linux-${ARCH}/rclone" > /out/rclone && \
     chmod 0755 /out/rclone
 
-FROM alpine:3.22
+FROM alpine:3.23
 
 LABEL org.opencontainers.image.description="Non-root resticprofile container with restic and rclone bundled"
 LABEL org.opencontainers.image.documentation="https://creativeprojects.github.io/resticprofile/"
